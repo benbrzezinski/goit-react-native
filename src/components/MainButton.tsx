@@ -1,11 +1,15 @@
-import { Text, StyleSheet, Pressable } from "react-native";
-import { ButtonTypes } from "../types";
+import { StyleSheet, TouchableOpacity, Text } from "react-native";
+import { MainButtonTypes } from "../types";
 
-const Button = ({ title, onPress }: ButtonTypes) => {
+const MainButton = ({ title, onPress }: MainButtonTypes) => {
   return (
-    <Pressable style={styles.button} onPress={onPress}>
+    <TouchableOpacity
+      style={styles.button}
+      activeOpacity={0.8}
+      onPress={onPress}
+    >
       <Text style={styles.text}>{title}</Text>
-    </Pressable>
+    </TouchableOpacity>
   );
 };
 
@@ -26,4 +30,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Button;
+export default MainButton;

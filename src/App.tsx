@@ -1,5 +1,5 @@
 import { useFonts } from "expo-font";
-import Registration from "./screens/Registration";
+import Signing from "./screens/Signing";
 
 const App = () => {
   const [fontsLoaded] = useFonts({
@@ -9,7 +9,7 @@ const App = () => {
 
   if (!fontsLoaded) return null;
 
-  return <Registration />;
+  return <Signing />;
 };
 
 export default App;
