@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   inputFocused: {
+    backgroundColor: "#fff",
     borderColor: "#ff6c00",
   },
 });

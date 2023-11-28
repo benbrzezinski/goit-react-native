@@ -1,11 +1,23 @@
-import { StyleSheet, View, Text, Alert } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  ActivityIndicator,
+  Pressable,
+} from "react-native";
 import { useState } from "react";
+import { ValidationError } from "yup";
 import { EvilIcons } from "@expo/vector-icons";
+import { Toast } from "toastify-react-native";
+import { registerSchema, loginSchema } from "../schemas";
+import { HomeTypes } from "../types";
 import MainInput from "./MainInput";
 import MainButton from "./MainButton";
 import useInputFocused from "../hooks/useInputFocused";
+import useImagePicker from "../hooks/useImagePicker";
 
-const SigningForm = () => {
+const SigningForm = ({ type }: HomeTypes) => {
   const [login, setLogin] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,37 +29,100 @@ const SigningForm = () => {
     handleInputFocus,
     handleInputBlur,
   } = useInputFocused();
+  const { image, setImage, loader, pickImage } = useImagePicker();
 
-  const handleOnPress = () => {
-    Alert.alert(
-      `1. Login: ${login} 
-       2. Email: ${email} 
-       3. Password: ${password}`
-    );
+  const handleOnPress = async () => {
+    try {
+      if (type === "registration") {
+        await registerSchema.validate({ login, email, password });
 
-    setLogin("");
-    setEmail("");
-    setPassword("");
+        Toast.success(
+          `{ Login: ${login}, Email: ${email}, Password: ${password} }`
+        );
+
+        setLogin("");
+        setEmail("");
+        setPassword("");
+      } else {
+        await loginSchema.validate({ email, password });
+
+        Toast.success(`{ Email: ${email}, Password: ${password} }`);
+
+        setEmail("");
+        setPassword("");
+      }
+    } catch (err) {
+      const yupError = err as ValidationError;
+      Toast.error(yupError.message, "top");
+    }
   };
 
   return (
-    <View style={styles.wrapper}>
-      <View style={styles.imgPickerBox}>
-        <View style={styles.imgPicker}>
-          <EvilIcons name="plus" size={36} style={styles.imgPickerIcon} />
+    <View
+      style={[
+        styles.wrapper,
+        {
+          paddingTop: type === "registration" ? 90 : 30,
+          paddingBottom: type === "registration" ? 80 : 140,
+        },
+      ]}
+    >
+      {type === "registration" ? (
+        <View style={styles.imgPickerBox}>
+          <View style={styles.imgPicker}>
+            {image ? (
+              <>
+                <View style={styles.imgPickerPhotoBox}>
+                  <Image
+                    source={{ uri: image }}
+                    style={styles.imgPickerPhoto}
+                    resizeMode="cover"
+                    alt="User profile picture"
+                  />
+                </View>
+                <Pressable
+                  style={[styles.imgPickerIcon, styles.imgPickerIconBox]}
+                  hitSlop={{ top: 2, bottom: 2, left: 5, right: 5 }}
+                  onPress={() => setImage("")}
+                >
+                  <EvilIcons name="close" size={20} color="#bdbdbd" />
+                </Pressable>
+              </>
+            ) : (
+              <EvilIcons
+                name="plus"
+                color="#ff6c00"
+                size={36}
+                style={styles.imgPickerIcon}
+                onPress={pickImage}
+              />
+            )}
+            <ActivityIndicator
+              size="small"
+              color="#ff6c00"
+              style={[
+                styles.imgPickerLoader,
+                { display: loader ? "flex" : "none" },
+              ]}
+            />
+          </View>
         </View>
-      </View>
-      <Text style={styles.title}>Registration</Text>
+      ) : null}
+      <Text style={styles.title}>
+        {type === "registration" ? "Registration" : "Sign in"}
+      </Text>
       <View style={styles.formBox}>
-        <MainInput
-          isInputFocused={isLoginFocused}
-          placeholder="Login"
-          secureTextEntry={false}
-          value={login}
-          onChangeText={setLogin}
-          onFocus={() => handleInputFocus("login")}
-          onBlur={() => handleInputBlur("login")}
-        />
+        {type === "registration" ? (
+          <MainInput
+            isInputFocused={isLoginFocused}
+            placeholder="Login"
+            secureTextEntry={false}
+            value={login}
+            onChangeText={setLogin}
+            onFocus={() => handleInputFocus("login")}
+            onBlur={() => handleInputBlur("login")}
+          />
+        ) : null}
         <MainInput
           isInputFocused={isEmailFocused}
           placeholder="Email"
@@ -76,8 +151,15 @@ const SigningForm = () => {
           </Text>
         </View>
       </View>
-      <MainButton title="Registration" onPress={handleOnPress} />
-      <Text style={styles.link}>Already have an account? Sign in</Text>
+      <MainButton
+        title={type === "registration" ? "Registration" : "Sign in"}
+        onPress={handleOnPress}
+      />
+      <Text style={styles.link}>
+        {type === "registration"
+          ? "Already have an account? Sign in"
+          : "Don't have an account? Register now"}
+      </Text>
     </View>
   );
 };
@@ -87,9 +169,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    paddingTop: 90,
     paddingHorizontal: 16,
-    paddingBottom: 80,
   },
   imgPickerBox: {
     alignItems: "center",
@@ -100,16 +180,42 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   imgPicker: {
+    position: "relative",
     width: 120,
     height: 120,
     backgroundColor: "#f6f6f6",
     borderRadius: 16,
   },
+  imgPickerPhotoBox: {
+    flex: 1,
+    borderRadius: 16,
+    overflow: "hidden",
+  },
+  imgPickerPhoto: {
+    flex: 1,
+  },
+  imgPickerIconBox: {
+    width: 26,
+    height: 26,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    borderWidth: 1,
+    borderStyle: "solid",
+    borderColor: "#e8e8e8",
+    borderRadius: 9999,
+    right: -13,
+  },
   imgPickerIcon: {
-    color: "#ff6c00",
     position: "absolute",
     bottom: 12,
     right: -18,
+  },
+  imgPickerLoader: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: [{ translateY: -10 }, { translateX: -10 }],
   },
   title: {
     fontFamily: "RobotoMedium",

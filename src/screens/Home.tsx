@@ -8,13 +8,14 @@ import {
   Platform,
   Dimensions,
 } from "react-native";
+import { HomeTypes } from "../types";
 import SigningForm from "../components/SigningForm";
 import Mountains from "../../assets/images/mountains-bg.png";
 
-const Signing = () => {
+const Home = ({ type }: HomeTypes) => {
   const keyboardVerticalOffset = Platform.select({
-    ios: -80,
-    android: -80,
+    ios: type === "registration" ? -80 : -140,
+    android: type === "registration" ? -80 : -140,
   });
 
   return (
@@ -27,11 +28,12 @@ const Signing = () => {
         <View style={styles.container}>
           <ImageBackground
             source={Mountains}
-            resizeMode="cover"
             style={styles.bgImg}
+            resizeMode="cover"
+            alt="Image of mountains in the background"
           />
           <View style={styles.formContainer}>
-            <SigningForm />
+            <SigningForm type={type} />
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -59,4 +61,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Signing;
+export default Home;

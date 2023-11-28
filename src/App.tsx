@@ -1,5 +1,6 @@
 import { useFonts } from "expo-font";
-import Signing from "./screens/Signing";
+import ToastManager from "toastify-react-native";
+import Home from "./screens/Home";
 
 const App = () => {
   const [fontsLoaded] = useFonts({
@@ -9,7 +10,21 @@ const App = () => {
 
   if (!fontsLoaded) return null;
 
-  return <Signing />;
+  return (
+    <>
+      <Home type="registration" />
+      <ToastManager
+        width={320}
+        height={70}
+        duration={5000}
+        textStyle={{
+          fontFamily: "RobotoRegular",
+          fontSize: 12,
+          color: "#212121",
+        }}
+      />
+    </>
+  );
 };
 
 export default App;

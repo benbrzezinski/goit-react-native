@@ -1,3 +1,7 @@
+export interface HomeTypes {
+  type: string;
+}
+
 export interface MainButtonTypes {
   title: string;
   onPress: () => void;
