@@ -1,12 +1,6 @@
-import {
-  StyleSheet,
-  View,
-  Text,
-  Image,
-  ActivityIndicator,
-  Pressable,
-} from "react-native";
+import { StyleSheet, View, Text, Image, Pressable } from "react-native";
 import { useState } from "react";
+import { MaterialIndicator } from "react-native-indicators";
 import { ValidationError } from "yup";
 import { EvilIcons } from "@expo/vector-icons";
 import { Toast } from "toastify-react-native";
@@ -97,13 +91,10 @@ const SigningForm = ({ type }: HomeTypes) => {
                 onPress={pickImage}
               />
             )}
-            <ActivityIndicator
-              size="small"
+            <MaterialIndicator
+              size={26}
               color="#ff6c00"
-              style={[
-                styles.imgPickerLoader,
-                { display: loader ? "flex" : "none" },
-              ]}
+              style={{ display: loader ? "flex" : "none" }}
             />
           </View>
         </View>
@@ -210,12 +201,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 12,
     right: -18,
-  },
-  imgPickerLoader: {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: [{ translateY: -10 }, { translateX: -10 }],
   },
   title: {
     fontFamily: "RobotoMedium",
