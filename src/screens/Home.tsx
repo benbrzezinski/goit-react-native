@@ -14,8 +14,8 @@ import Mountains from "../../assets/images/mountains-bg.png";
 
 const Home = ({ type }: HomeTypes) => {
   const keyboardVerticalOffset = Platform.select({
-    ios: type === "registration" ? -80 : -140,
-    android: type === "registration" ? -80 : -140,
+    ios: type === "registration" ? -70 : -130,
+    android: type === "registration" ? -40 : -100,
   });
 
   return (

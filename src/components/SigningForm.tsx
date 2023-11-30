@@ -1,6 +1,6 @@
 import { StyleSheet, View, Text, Image, Pressable } from "react-native";
 import { useState } from "react";
-import { MaterialIndicator } from "react-native-indicators";
+import { UIActivityIndicator } from "react-native-indicators";
 import { ValidationError } from "yup";
 import { EvilIcons } from "@expo/vector-icons";
 import { Toast } from "toastify-react-native";
@@ -76,22 +76,22 @@ const SigningForm = ({ type }: HomeTypes) => {
                 </View>
                 <Pressable
                   style={[styles.imgPickerIcon, styles.imgPickerIconBox]}
-                  hitSlop={{ top: 2, bottom: 2, left: 5, right: 5 }}
                   onPress={() => setImage("")}
+                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                 >
                   <EvilIcons name="close" size={20} color="#bdbdbd" />
                 </Pressable>
               </>
             ) : (
-              <EvilIcons
-                name="plus"
-                color="#ff6c00"
-                size={36}
+              <Pressable
                 style={styles.imgPickerIcon}
                 onPress={pickImage}
-              />
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              >
+                <EvilIcons name="plus" color="#ff6c00" size={36} />
+              </Pressable>
             )}
-            <MaterialIndicator
+            <UIActivityIndicator
               size={26}
               color="#ff6c00"
               style={{ display: loader ? "flex" : "none" }}
@@ -123,7 +123,7 @@ const SigningForm = ({ type }: HomeTypes) => {
           onFocus={() => handleInputFocus("email")}
           onBlur={() => handleInputBlur("email")}
         />
-        <View style={styles.passwordBox}>
+        <View>
           <MainInput
             isInputFocused={isPasswordFocused}
             placeholder="Password"
@@ -134,12 +134,15 @@ const SigningForm = ({ type }: HomeTypes) => {
             onBlur={() => handleInputBlur("password")}
             paddingRight={67}
           />
-          <Text
-            style={styles.passwordShow}
+          <Pressable
+            style={styles.passwordShowBox}
             onPress={() => setIsPasswordShowed(p => !p)}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
-            {isPasswordShowed ? "Hide" : "Show"}
-          </Text>
+            <Text style={styles.passwordShow}>
+              {isPasswordShowed ? "Hide" : "Show"}
+            </Text>
+          </Pressable>
         </View>
       </View>
       <MainButton
@@ -211,14 +214,15 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   formBox: { gap: 16, marginBottom: 40 },
-  passwordBox: {
-    position: "relative",
-  },
-  passwordShow: {
+  passwordShowBox: {
+    height: 24,
+    justifyContent: "center",
     position: "absolute",
     top: "50%",
     right: 16,
-    transform: [{ translateY: -10 }],
+    transform: [{ translateY: -12 }],
+  },
+  passwordShow: {
     color: "#1b4371",
     fontSize: 17,
     fontFamily: "RobotoRegular",

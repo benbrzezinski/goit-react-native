@@ -15,9 +15,9 @@ const App = () => {
 
   return (
     <>
-      {/* <Home type="registration" />
-      <Home type="login" /> */}
-      <Posts />
+      <Home type="registration" />
+      {/* <Home type="login" /> */}
+      {/* <Posts /> */}
       <ToastManager
         width={320}
         height={70}
