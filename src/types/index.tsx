@@ -1,4 +1,4 @@
-export interface HomeTypes {
+export interface UserAuthTypes {
   type: string;
 }
 

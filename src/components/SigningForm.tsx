@@ -5,13 +5,13 @@ import { ValidationError } from "yup";
 import { EvilIcons } from "@expo/vector-icons";
 import { Toast } from "toastify-react-native";
 import { registerSchema, loginSchema } from "../schemas";
-import { HomeTypes } from "../types";
+import { UserAuthTypes } from "../types";
 import MainInput from "./MainInput";
 import MainButton from "./MainButton";
 import useInputFocused from "../hooks/useInputFocused";
 import useImagePicker from "../hooks/useImagePicker";
 
-const SigningForm = ({ type }: HomeTypes) => {
+const SigningForm = ({ type }: UserAuthTypes) => {
   const [login, setLogin] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

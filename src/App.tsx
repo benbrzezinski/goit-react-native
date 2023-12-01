@@ -1,8 +1,8 @@
 import { StatusBar } from "react-native";
 import { useFonts } from "expo-font";
 import ToastManager from "toastify-react-native";
+import UserAuth from "./screens/UserAuth";
 import Home from "./screens/Home";
-import Posts from "./screens/Posts";
 
 const App = () => {
   const [fontsLoaded] = useFonts({
@@ -15,9 +15,9 @@ const App = () => {
 
   return (
     <>
-      <Home type="registration" />
-      {/* <Home type="login" /> */}
-      {/* <Posts /> */}
+      <UserAuth type="registration" />
+      {/* <UserAuth type="login" /> */}
+      {/* <Home /> */}
       <ToastManager
         width={320}
         height={70}
