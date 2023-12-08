@@ -5,6 +5,7 @@ const MainInput = ({
   isInputFocused,
   placeholder,
   secureTextEntry,
+  inputMode = "text",
   value,
   onChangeText,
   onFocus,
@@ -21,6 +22,7 @@ const MainInput = ({
       placeholder={placeholder}
       placeholderTextColor="#bdbdbd"
       secureTextEntry={secureTextEntry}
+      inputMode={inputMode}
       value={value}
       onChangeText={onChangeText}
       onFocus={onFocus}

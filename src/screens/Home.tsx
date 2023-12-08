@@ -1,102 +1,120 @@
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
-  StyleSheet,
-  SafeAreaView,
-  View,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  Image,
-} from "react-native";
-import { Feather, AntDesign, Ionicons } from "@expo/vector-icons";
-import User from "../../assets/images/user.jpg";
+  useRoute,
+  useNavigation,
+  getFocusedRouteNameFromRoute,
+} from "@react-navigation/native";
+import { StyleSheet, View, Pressable, TouchableOpacity } from "react-native";
+import { Feather, AntDesign } from "@expo/vector-icons";
+import Posts from "./Posts";
+import Profile from "./Profile";
+import HeaderRight from "../components/HeaderRight";
 
 const Home = () => {
+  const Tab = createBottomTabNavigator();
+  const route = useRoute();
+  const currentRoute = getFocusedRouteNameFromRoute(route);
+  const navigation = useNavigation();
+
+  const handleNav = (type: "posts" | "createPost" | "profile") => {
+    const navType: { [key: string]: () => void } = {
+      posts: () => navigation.navigate("Posts"),
+      createPost: () => navigation.navigate("CreatePost"),
+      profile: () => navigation.navigate("Profile"),
+    };
+
+    return navType[type]();
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Feather
-          name="log-out"
-          size={24}
-          color="#bdbdbd"
-          style={styles.hidden}
-        />
-        <Text style={styles.title}>Posts</Text>
-        <Feather name="log-out" size={24} color="#bdbdbd" />
-      </View>
-      <ScrollView style={styles.main}>
-        <View style={styles.userBox}>
-          <Image
-            source={User}
-            style={styles.userImg}
-            resizeMode="cover"
-            alt="User profile picture"
-          />
-          <View>
-            <Text style={styles.userLogin}>Klaudia Nowak</Text>
-            <Text style={styles.userEmail}>email@example.com</Text>
-          </View>
+    <Tab.Navigator
+      initialRouteName="Posts"
+      tabBar={() => (
+        <View style={styles.footer}>
+          <Pressable
+            onPress={() => handleNav("posts")}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <Feather name="grid" size={24} color="#212121cc" />
+          </Pressable>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              { pointerEvents: currentRoute === "Profile" ? "none" : "auto" },
+            ]}
+            activeOpacity={0.8}
+            onPress={() => handleNav("createPost")}
+          >
+            {currentRoute === "Profile" ? (
+              <Feather name="user" size={24} color="#fff" />
+            ) : (
+              <AntDesign name="plus" size={20} color="#fff" />
+            )}
+          </TouchableOpacity>
+          <Pressable
+            onPress={() =>
+              handleNav(currentRoute === "Profile" ? "createPost" : "profile")
+            }
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            {currentRoute === "Profile" ? (
+              <AntDesign name="plus" size={20} color="#212121cc" />
+            ) : (
+              <Feather name="user" size={24} color="#212121cc" />
+            )}
+          </Pressable>
         </View>
-      </ScrollView>
-      <View style={styles.footer}>
-        <Ionicons name="grid-outline" size={24} color="#212121cc" />
-        <TouchableOpacity style={styles.button} activeOpacity={0.8}>
-          <AntDesign name="plus" size={20} color="#fff" />
-        </TouchableOpacity>
-        <Feather name="user" size={24} color="#212121cc" />
-      </View>
-    </SafeAreaView>
+      )}
+      screenOptions={{
+        headerStyle: {
+          shadowOpacity: 0,
+          backgroundColor: "#fff",
+          borderBottomWidth: 0.5,
+          borderStyle: "solid",
+          borderBottomColor: "#0000004d",
+        },
+        headerTitleStyle: {
+          fontFamily: "RobotoMedium",
+          fontWeight: "500",
+          fontSize: 17,
+          color: "#212121",
+        },
+        headerTitleAlign: "center",
+      }}
+    >
+      <Tab.Screen
+        name="Posts"
+        component={Posts}
+        options={{
+          title: "Posts",
+          headerLeft: () => null,
+          headerRight: () => <HeaderRight style={{ paddingRight: 16 }} />,
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          headerShown: false,
+        }}
+      />
+    </Tab.Navigator>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    borderBottomWidth: 1,
-    borderStyle: "solid",
-    borderBottomColor: "#0000004d",
-    padding: 16,
-  },
-  hidden: { pointerEvents: "none", opacity: 0 },
-  title: {
-    fontFamily: "RobotoMedium",
-    fontWeight: "500",
-    fontSize: 17,
-    color: "#212121",
-  },
-  main: { flex: 1, paddingVertical: 30, paddingHorizontal: 16 },
-  userBox: { flexDirection: "row", alignItems: "center", gap: 10 },
-  userImg: {
-    width: 60,
-    height: 60,
-    backgroundColor: "#f6f6f6",
-    borderRadius: 16,
-  },
-  userLogin: {
-    fontFamily: "RobotoBold",
-    fontWeight: "700",
-    fontSize: 13,
-    color: "#212121",
-  },
-  userEmail: {
-    fontFamily: "RobotoRegular",
-    fontWeight: "400",
-    fontSize: 11,
-    color: "#212121cc",
-  },
   footer: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     gap: 40,
-    borderTopWidth: 1,
+    backgroundColor: "#fff",
+    borderTopWidth: 0.5,
     borderStyle: "solid",
     borderTopColor: "#0000004d",
-    padding: 16,
+    paddingTop: 10,
+    paddingHorizontal: 16,
+    paddingBottom: 30,
   },
   button: {
     width: 70,

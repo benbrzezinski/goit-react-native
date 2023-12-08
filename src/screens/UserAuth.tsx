@@ -8,14 +8,19 @@ import {
   Platform,
   Dimensions,
 } from "react-native";
-import { UserAuthTypes } from "../types";
+import { useRoute } from "@react-navigation/native";
+import { RouteParams } from "../types";
 import SigningForm from "../components/SigningForm";
 import Mountains from "../../assets/images/mountains-bg.png";
 
-const UserAuth = ({ type }: UserAuthTypes) => {
+const UserAuth = () => {
+  const {
+    params: { type },
+  } = useRoute() as RouteParams;
+
   const keyboardVerticalOffset = Platform.select({
-    ios: type === "registration" ? -70 : -130,
-    android: type === "registration" ? -40 : -100,
+    ios: type === "registration" ? -100 : -160,
+    android: type === "registration" ? -70 : -130,
   });
 
   return (

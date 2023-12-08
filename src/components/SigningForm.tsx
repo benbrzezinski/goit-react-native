@@ -1,17 +1,18 @@
 import { StyleSheet, View, Text, Image, Pressable } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 import { UIActivityIndicator } from "react-native-indicators";
 import { ValidationError } from "yup";
 import { EvilIcons } from "@expo/vector-icons";
 import { Toast } from "toastify-react-native";
 import { registerSchema, loginSchema } from "../schemas";
-import { UserAuthTypes } from "../types";
+import { SigningFormTypes } from "../types";
 import MainInput from "./MainInput";
 import MainButton from "./MainButton";
 import useInputFocused from "../hooks/useInputFocused";
 import useImagePicker from "../hooks/useImagePicker";
 
-const SigningForm = ({ type }: UserAuthTypes) => {
+const SigningForm = ({ type }: SigningFormTypes) => {
   const [login, setLogin] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,6 +25,7 @@ const SigningForm = ({ type }: UserAuthTypes) => {
     handleInputBlur,
   } = useInputFocused();
   const { image, setImage, loader, pickImage } = useImagePicker();
+  const navigation = useNavigation();
 
   const handleOnPress = async () => {
     try {
@@ -37,6 +39,8 @@ const SigningForm = ({ type }: UserAuthTypes) => {
         setLogin("");
         setEmail("");
         setPassword("");
+
+        navigation.navigate("Home");
       } else {
         await loginSchema.validate({ email, password });
 
@@ -44,10 +48,20 @@ const SigningForm = ({ type }: UserAuthTypes) => {
 
         setEmail("");
         setPassword("");
+
+        navigation.navigate("Home");
       }
     } catch (err) {
       const yupError = err as ValidationError;
       Toast.error(yupError.message, "top");
+    }
+  };
+
+  const handleSwitchForm = () => {
+    if (type === "registration") {
+      navigation.navigate("Login");
+    } else {
+      navigation.navigate("Registration");
     }
   };
 
@@ -118,6 +132,7 @@ const SigningForm = ({ type }: UserAuthTypes) => {
           isInputFocused={isEmailFocused}
           placeholder="Email"
           secureTextEntry={false}
+          inputMode="email"
           value={email}
           onChangeText={setEmail}
           onFocus={() => handleInputFocus("email")}
@@ -149,11 +164,16 @@ const SigningForm = ({ type }: UserAuthTypes) => {
         title={type === "registration" ? "Registration" : "Sign in"}
         onPress={handleOnPress}
       />
-      <Text style={styles.link}>
-        {type === "registration"
-          ? "Already have an account? Sign in"
-          : "Don't have an account? Register now"}
-      </Text>
+      <Pressable
+        onPress={handleSwitchForm}
+        hitSlop={{ top: 6, bottom: 20, left: 5, right: 5 }}
+      >
+        <Text style={styles.link}>
+          {type === "registration"
+            ? "Already have an account? Sign in"
+            : "Don't have an account? Register now"}
+        </Text>
+      </Pressable>
     </View>
   );
 };
@@ -229,10 +249,10 @@ const styles = StyleSheet.create({
     fontWeight: "400",
   },
   link: {
-    color: "#1b4371",
-    fontSize: 16,
     fontFamily: "RobotoRegular",
     fontWeight: "400",
+    fontSize: 16,
+    color: "#1b4371",
     textAlign: "center",
   },
 });
