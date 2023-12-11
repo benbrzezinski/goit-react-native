@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "goit-react-native",
-    "slug": "goit-react-native",
+    "name": "posts",
+    "slug": "posts",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "",
@@ -13,7 +13,11 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.example.Posts",
+      "config": {
+        "googleMapsApiKey": "AIzaSyA5187MQmdcRVQBIffp_o8Cdu2l-CxDCBU"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -24,14 +28,6 @@
     },
     "web": {
       "favicon": ""
-    },
-    "plugins": [
-      [
-        "expo-image-picker",
-        {
-          "photosPermission": "Allow the app to access your photos to set your profile picture"
-        }
-      ]
-    ]
+    }
   }
 }

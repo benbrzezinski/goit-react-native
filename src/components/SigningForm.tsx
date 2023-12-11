@@ -24,30 +24,26 @@ const SigningForm = ({ type }: SigningFormTypes) => {
     handleInputFocus,
     handleInputBlur,
   } = useInputFocused();
-  const { image, setImage, loader, pickImage } = useImagePicker();
+  const { image, setImage, loader, PickImageTypeModal, setModalVisible } =
+    useImagePicker();
   const navigation = useNavigation();
 
-  const handleOnPress = async () => {
+  const handleSigningForm = async () => {
     try {
       if (type === "registration") {
         await registerSchema.validate({ login, email, password });
 
         Toast.success(
-          `{ Login: ${login}, Email: ${email}, Password: ${password} }`
+          `{ Login: ${login.trim()}, Email: ${email.trim()}, Password: ${password.trim()} }`
         );
-
-        setLogin("");
-        setEmail("");
-        setPassword("");
 
         navigation.navigate("Home");
       } else {
         await loginSchema.validate({ email, password });
 
-        Toast.success(`{ Email: ${email}, Password: ${password} }`);
-
-        setEmail("");
-        setPassword("");
+        Toast.success(
+          `{ Email: ${email.trim()}, Password: ${password.trim()} }`
+        );
 
         navigation.navigate("Home");
       }
@@ -66,115 +62,116 @@ const SigningForm = ({ type }: SigningFormTypes) => {
   };
 
   return (
-    <View
-      style={[
-        styles.wrapper,
-        {
-          paddingTop: type === "registration" ? 90 : 30,
-          paddingBottom: type === "registration" ? 80 : 140,
-        },
-      ]}
-    >
-      {type === "registration" ? (
-        <View style={styles.imgPickerBox}>
-          <View style={styles.imgPicker}>
-            {image ? (
-              <>
-                <View style={styles.imgPickerPhotoBox}>
+    <>
+      <View
+        style={[
+          styles.wrapper,
+          {
+            paddingTop: type === "registration" ? 90 : 30,
+            paddingBottom: type === "registration" ? 80 : 140,
+          },
+        ]}
+      >
+        {type === "registration" ? (
+          <View style={styles.imgPickerBox}>
+            <View style={styles.imgPicker}>
+              {image ? (
+                <>
                   <Image
                     source={{ uri: image }}
                     style={styles.imgPickerPhoto}
                     resizeMode="cover"
                     alt="User profile picture"
                   />
-                </View>
+                  <Pressable
+                    style={[styles.imgPickerIcon, styles.imgPickerIconBox]}
+                    onPress={() => setImage("")}
+                    hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                  >
+                    <EvilIcons name="close" size={20} color="#bdbdbd" />
+                  </Pressable>
+                </>
+              ) : (
                 <Pressable
-                  style={[styles.imgPickerIcon, styles.imgPickerIconBox]}
-                  onPress={() => setImage("")}
+                  style={styles.imgPickerIcon}
+                  onPress={() => setModalVisible(true)}
                   hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                 >
-                  <EvilIcons name="close" size={20} color="#bdbdbd" />
+                  <EvilIcons name="plus" color="#ff6c00" size={36} />
                 </Pressable>
-              </>
-            ) : (
-              <Pressable
-                style={styles.imgPickerIcon}
-                onPress={pickImage}
-                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-              >
-                <EvilIcons name="plus" color="#ff6c00" size={36} />
-              </Pressable>
-            )}
-            <UIActivityIndicator
-              size={26}
-              color="#ff6c00"
-              style={{ display: loader ? "flex" : "none" }}
+              )}
+              <UIActivityIndicator
+                size={26}
+                color="#ff6c00"
+                style={{ display: loader ? "flex" : "none" }}
+              />
+            </View>
+          </View>
+        ) : null}
+        <Text style={styles.title}>
+          {type === "registration" ? "Registration" : "Sign in"}
+        </Text>
+        <View style={styles.formBox}>
+          {type === "registration" ? (
+            <MainInput
+              isInputFocused={isLoginFocused}
+              placeholder="Login"
+              secureTextEntry={false}
+              value={login}
+              onChangeText={setLogin}
+              onFocus={() => handleInputFocus("login")}
+              onBlur={() => handleInputBlur("login")}
             />
+          ) : null}
+          <MainInput
+            isInputFocused={isEmailFocused}
+            placeholder="Email"
+            secureTextEntry={false}
+            inputMode="email"
+            value={email}
+            onChangeText={setEmail}
+            onFocus={() => handleInputFocus("email")}
+            onBlur={() => handleInputBlur("email")}
+          />
+          <View>
+            <MainInput
+              isInputFocused={isPasswordFocused}
+              placeholder="Password"
+              secureTextEntry={!isPasswordShowed}
+              value={password}
+              onChangeText={setPassword}
+              onFocus={() => handleInputFocus("password")}
+              onBlur={() => handleInputBlur("password")}
+              paddingRight={67}
+            />
+            <Pressable
+              style={styles.passwordShowBox}
+              onPress={() => setIsPasswordShowed(p => !p)}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <Text style={styles.passwordShow}>
+                {isPasswordShowed ? "Hide" : "Show"}
+              </Text>
+            </Pressable>
           </View>
         </View>
-      ) : null}
-      <Text style={styles.title}>
-        {type === "registration" ? "Registration" : "Sign in"}
-      </Text>
-      <View style={styles.formBox}>
-        {type === "registration" ? (
-          <MainInput
-            isInputFocused={isLoginFocused}
-            placeholder="Login"
-            secureTextEntry={false}
-            value={login}
-            onChangeText={setLogin}
-            onFocus={() => handleInputFocus("login")}
-            onBlur={() => handleInputBlur("login")}
-          />
-        ) : null}
-        <MainInput
-          isInputFocused={isEmailFocused}
-          placeholder="Email"
-          secureTextEntry={false}
-          inputMode="email"
-          value={email}
-          onChangeText={setEmail}
-          onFocus={() => handleInputFocus("email")}
-          onBlur={() => handleInputBlur("email")}
+        <MainButton
+          title={type === "registration" ? "Registration" : "Sign in"}
+          onPress={handleSigningForm}
         />
-        <View>
-          <MainInput
-            isInputFocused={isPasswordFocused}
-            placeholder="Password"
-            secureTextEntry={!isPasswordShowed}
-            value={password}
-            onChangeText={setPassword}
-            onFocus={() => handleInputFocus("password")}
-            onBlur={() => handleInputBlur("password")}
-            paddingRight={67}
-          />
-          <Pressable
-            style={styles.passwordShowBox}
-            onPress={() => setIsPasswordShowed(p => !p)}
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-          >
-            <Text style={styles.passwordShow}>
-              {isPasswordShowed ? "Hide" : "Show"}
-            </Text>
-          </Pressable>
-        </View>
+        <Pressable
+          onPress={handleSwitchForm}
+          hitSlop={{ top: 6, bottom: 20, left: 5, right: 5 }}
+        >
+          <Text style={styles.link}>
+            {type === "registration"
+              ? "Already have an account? Sign in"
+              : "Don't have an account? Register now"}
+          </Text>
+        </Pressable>
       </View>
-      <MainButton
-        title={type === "registration" ? "Registration" : "Sign in"}
-        onPress={handleOnPress}
-      />
-      <Pressable
-        onPress={handleSwitchForm}
-        hitSlop={{ top: 6, bottom: 20, left: 5, right: 5 }}
-      >
-        <Text style={styles.link}>
-          {type === "registration"
-            ? "Already have an account? Sign in"
-            : "Don't have an account? Register now"}
-        </Text>
-      </Pressable>
-    </View>
+      <PickImageTypeModal />
+    </>
   );
 };
 
@@ -200,13 +197,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#f6f6f6",
     borderRadius: 16,
   },
-  imgPickerPhotoBox: {
-    flex: 1,
-    borderRadius: 16,
-    overflow: "hidden",
-  },
   imgPickerPhoto: {
     flex: 1,
+    borderRadius: 16,
   },
   imgPickerIconBox: {
     width: 26,

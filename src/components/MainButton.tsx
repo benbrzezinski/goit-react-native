@@ -4,14 +4,16 @@ import { MainButtonTypes } from "../types";
 const MainButton = ({
   title,
   onPress,
-  styleButton,
-  styleText,
+  styleButton = {},
+  styleText = {},
+  disabled = false,
 }: MainButtonTypes) => {
   return (
     <TouchableOpacity
       style={[styles.button, styleButton]}
       activeOpacity={0.8}
       onPress={onPress}
+      disabled={disabled}
     >
       <Text style={[styles.text, styleText]}>{title}</Text>
     </TouchableOpacity>
@@ -24,7 +26,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#ff6c00",
     borderRadius: 100,
-    paddingVertical: 16,
+    padding: 16,
     marginBottom: 16,
   },
   text: {

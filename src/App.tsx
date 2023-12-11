@@ -7,6 +7,7 @@ import ToastManager from "toastify-react-native";
 import UserAuth from "./screens/UserAuth";
 import Home from "./screens/Home";
 import CreatePost from "./screens/CreatePost";
+import Map from "./screens/Map";
 import HeaderLeft from "./components/HeaderLeft";
 
 const App = () => {
@@ -63,6 +64,11 @@ const App = () => {
             name="CreatePost"
             component={CreatePost}
             options={{ title: "Create post", headerLeft: HeaderLeft }}
+          />
+          <MainStack.Screen
+            name="Map"
+            component={Map}
+            options={{ headerShown: false }}
           />
         </MainStack.Navigator>
       </NavigationContainer>

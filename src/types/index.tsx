@@ -13,6 +13,7 @@ export interface MainButtonTypes {
   onPress: () => void;
   styleButton?: object;
   styleText?: object;
+  disabled?: boolean;
 }
 
 export interface MainInputTypes {

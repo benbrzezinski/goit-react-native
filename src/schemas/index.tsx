@@ -1,14 +1,6 @@
 import * as Yup from "yup";
 
 export const registerSchema = Yup.object().shape({
-  login: Yup.string()
-    .matches(/^[a-zA-Z]+$/, "Login must contain only letters")
-    .trim()
-    .required("Login is required"),
-  email: Yup.string()
-    .email("Invalid email")
-    .trim()
-    .required("Email is required"),
   password: Yup.string()
     .min(6, "Password must be at least 6 characters")
     .matches(
@@ -17,13 +9,17 @@ export const registerSchema = Yup.object().shape({
     )
     .trim()
     .required("Password is required"),
+  email: Yup.string()
+    .email("Invalid email")
+    .trim()
+    .required("Email is required"),
+  login: Yup.string()
+    .matches(/^[a-zA-Z\s]+$/, "Login must contain only letters and spaces")
+    .trim()
+    .required("Login is required"),
 });
 
 export const loginSchema = Yup.object().shape({
-  email: Yup.string()
-    .email("Invalid email")
-    .trim()
-    .required("Email is required"),
   password: Yup.string()
     .min(6, "Password must be at least 6 characters")
     .matches(
@@ -32,4 +28,8 @@ export const loginSchema = Yup.object().shape({
     )
     .trim()
     .required("Password is required"),
+  email: Yup.string()
+    .email("Invalid email")
+    .trim()
+    .required("Email is required"),
 });
