@@ -68,7 +68,7 @@ const App = () => {
           <MainStack.Screen
             name="Map"
             component={Map}
-            options={{ headerShown: false }}
+            options={{ title: "Map", headerLeft: HeaderLeft }}
           />
         </MainStack.Navigator>
       </NavigationContainer>

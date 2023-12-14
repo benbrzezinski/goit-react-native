@@ -9,14 +9,14 @@ import {
   Dimensions,
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
-import { RouteParams } from "../types";
+import { AuthRouteParams } from "../types";
 import SigningForm from "../components/SigningForm";
 import Mountains from "../../assets/images/mountains-bg.png";
 
 const UserAuth = () => {
   const {
     params: { type },
-  } = useRoute() as RouteParams;
+  } = useRoute() as AuthRouteParams;
 
   const keyboardVerticalOffset = Platform.select({
     ios: type === "registration" ? -100 : -160,

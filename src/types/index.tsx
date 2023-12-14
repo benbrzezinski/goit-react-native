@@ -28,8 +28,13 @@ export interface MainInputTypes {
   paddingRight?: number;
 }
 
-export interface RouteParams {
+export interface AuthRouteParams {
   params: {
     type: "registration" | "login";
   };
 }
+
+export type LocationCoords = {
+  latitude: number;
+  longitude: number;
+} | null;

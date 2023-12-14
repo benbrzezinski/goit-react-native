@@ -37,6 +37,10 @@ const SigningForm = ({ type }: SigningFormTypes) => {
           `{ Login: ${login.trim()}, Email: ${email.trim()}, Password: ${password.trim()} }`
         );
 
+        setLogin("");
+        setEmail("");
+        setPassword("");
+
         navigation.navigate("Home");
       } else {
         await loginSchema.validate({ email, password });
@@ -44,6 +48,9 @@ const SigningForm = ({ type }: SigningFormTypes) => {
         Toast.success(
           `{ Email: ${email.trim()}, Password: ${password.trim()} }`
         );
+
+        setEmail("");
+        setPassword("");
 
         navigation.navigate("Home");
       }

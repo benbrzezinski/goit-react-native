@@ -17,22 +17,25 @@ import { UIActivityIndicator } from "react-native-indicators";
 import { Fontisto, EvilIcons, Feather } from "@expo/vector-icons";
 import MainButton from "../components/MainButton";
 import useImagePicker from "../hooks/useImagePicker";
+import useLocation from "../hooks/useLocation";
 
 const CreatePost = () => {
   const [name, setName] = useState("");
-  const [location, setLocation] = useState("");
+  const [isLocationFocused, setIsLocationFocused] = useState(false);
   const { image, setImage, loader, PickImageTypeModal, setModalVisible } =
     useImagePicker();
+  const { locationName, setLocationName, locationLoader, getUserLocation } =
+    useLocation();
   const navigation = useNavigation();
 
   const canBePublished =
-    image.trim() && name.trim() && location.trim() ? true : false;
+    image.trim() && name.trim() && locationName.trim() ? true : false;
 
   const handlePublish = () => {
     Toast.success(
       `{ Image: ${image
         .slice(0, 6)
-        .trim()}, Name: ${name.trim()}, Location: ${location.trim()} }`
+        .trim()}, Name: ${name.trim()}, Location: ${locationName.trim()} }`
     );
 
     navigation.navigate("Posts");
@@ -84,7 +87,16 @@ const CreatePost = () => {
               </View>
               <Text style={styles.text}>{image ? "Edit photo" : "Photo"}</Text>
             </View>
-            <View style={styles.inputsContainer}>
+            <View
+              style={[
+                styles.inputsContainer,
+                {
+                  flexDirection: isLocationFocused
+                    ? "column-reverse"
+                    : "column",
+                },
+              ]}
+            >
               <TextInput
                 style={[
                   styles.input,
@@ -98,23 +110,33 @@ const CreatePost = () => {
                 onChangeText={setName}
               />
               <View style={styles.locationBox}>
-                <EvilIcons
-                  name="location"
-                  style={styles.locationIcon}
-                  size={28}
-                  color="#bdbdbd"
-                />
+                <TouchableOpacity
+                  style={styles.locationBtn}
+                  activeOpacity={0.8}
+                  onPress={async () => {
+                    Keyboard.dismiss();
+                    await getUserLocation();
+                  }}
+                >
+                  {locationLoader ? (
+                    <UIActivityIndicator size={22} color="#fff" />
+                  ) : (
+                    <EvilIcons name="location" size={28} color="#fff" />
+                  )}
+                </TouchableOpacity>
                 <TextInput
                   style={[
                     styles.input,
                     {
-                      paddingLeft: 30,
+                      paddingLeft: 48,
                     },
                   ]}
                   placeholder="Location..."
                   placeholderTextColor="#bdbdbd"
-                  value={location}
-                  onChangeText={setLocation}
+                  value={locationName}
+                  onChangeText={setLocationName}
+                  onFocus={() => setIsLocationFocused(true)}
+                  onBlur={() => setIsLocationFocused(false)}
                 />
               </View>
             </View>
@@ -203,11 +225,18 @@ const styles = StyleSheet.create({
   locationBox: {
     position: "relative",
   },
-  locationIcon: {
+  locationBtn: {
+    width: 40,
+    height: 36,
+    justifyContent: "center",
+    alignItems: "center",
     position: "absolute",
     top: "50%",
     left: 0,
-    transform: [{ translateY: -11 }],
+    transform: [{ translateY: -18 }],
+    zIndex: 1,
+    backgroundColor: "#ff6c00",
+    borderRadius: 8,
   },
   footer: {
     justifyContent: "center",
