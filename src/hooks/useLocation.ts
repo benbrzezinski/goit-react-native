@@ -35,7 +35,7 @@ const useLocation = () => {
         setLocationCoords(coords);
         setLocationName(address);
 
-        navigation.navigate("Map");
+        navigation.navigate("Map", { type: "user" });
       } else {
         Toast.error(
           "Access to your location is denied, please check the application settings",
@@ -47,12 +47,31 @@ const useLocation = () => {
     }
   };
 
+  const getPhotoLocation = async (address: string) => {
+    const { granted } = await Location.requestForegroundPermissionsAsync();
+
+    if (granted) {
+      const [coords] = await Location.geocodeAsync(address);
+
+      setLocationCoords({
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+      });
+    } else {
+      Toast.error(
+        "Access to your location is denied, please check the application settings",
+        "top"
+      );
+    }
+  };
+
   return {
     locationName,
     setLocationName,
     locationCoords,
     locationLoader,
     getUserLocation,
+    getPhotoLocation,
   };
 };
 

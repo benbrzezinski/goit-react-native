@@ -1,12 +1,22 @@
 import { StyleSheet, Text, View, Pressable, Image } from "react-native";
 import { UIActivityIndicator } from "react-native-indicators";
 import { EvilIcons } from "@expo/vector-icons";
+import { updateUserProfile } from "../redux/auth/actions";
+import { useAppDispatch } from "../redux/store";
+import { auth } from "../firebase";
 import HeaderRight from "./HeaderRight";
 import useImagePicker from "../hooks/useImagePicker";
+import useAuth from "../hooks/useAuth";
 
 const ProfileContent = () => {
-  const { image, setImage, loader, PickImageTypeModal, setModalVisible } =
+  const {
+    user: { displayName },
+    isUserUpdateLoading,
+  } = useAuth();
+  const { photoURL, loader, PickImageModal, setModalVisible } =
     useImagePicker();
+  const dispatch = useAppDispatch();
+  const authName = auth.currentUser?.displayName;
 
   return (
     <>
@@ -14,17 +24,17 @@ const ProfileContent = () => {
         <HeaderRight style={styles.logOutIcon} />
         <View style={styles.imgPickerBox}>
           <View style={styles.imgPicker}>
-            {image ? (
+            {photoURL && !isUserUpdateLoading ? (
               <>
                 <Image
-                  source={{ uri: image }}
+                  source={{ uri: photoURL }}
                   style={styles.imgPickerPhoto}
                   resizeMode="cover"
                   alt="User profile picture"
                 />
                 <Pressable
                   style={[styles.imgPickerIcon, styles.imgPickerIconBox]}
-                  onPress={() => setImage("")}
+                  onPress={() => dispatch(updateUserProfile({ photoURL: "" }))}
                   hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                 >
                   <EvilIcons name="close" size={20} color="#bdbdbd" />
@@ -42,13 +52,15 @@ const ProfileContent = () => {
             <UIActivityIndicator
               size={26}
               color="#ff6c00"
-              style={{ display: loader ? "flex" : "none" }}
+              style={{
+                display: loader || isUserUpdateLoading ? "flex" : "none",
+              }}
             />
           </View>
         </View>
-        <Text style={styles.userLogin}>Klaudia Nowak</Text>
+        <Text style={styles.userLogin}>{displayName ?? authName ?? ""}</Text>
       </View>
-      <PickImageTypeModal />
+      <PickImageModal userProfile />
     </>
   );
 };

@@ -15,18 +15,23 @@ const MainButton = ({
       onPress={onPress}
       disabled={disabled}
     >
-      <Text style={[styles.text, styleText]}>{title}</Text>
+      {typeof title === "string" ? (
+        <Text style={[styles.text, styleText]}>{title}</Text>
+      ) : (
+        title
+      )}
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   button: {
+    height: 50,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#ff6c00",
     borderRadius: 100,
-    padding: 16,
+    paddingHorizontal: 16,
     marginBottom: 16,
   },
   text: {

@@ -16,7 +16,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.example.Posts",
       "config": {
-        "googleMapsApiKey": "AIzaSyA5187MQmdcRVQBIffp_o8Cdu2l-CxDCBU"
+        "googleMapsApiKey": ""
       }
     },
     "android": {

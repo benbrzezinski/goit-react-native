@@ -1,14 +1,20 @@
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { StyleSheet, View } from "react-native";
+import { useRoute } from "@react-navigation/native";
 import { useEffect } from "react";
 import { UIActivityIndicator } from "react-native-indicators";
+import { MapRouteParams } from "../types";
 import useLocation from "../hooks/useLocation";
 
 const Map = () => {
-  const { locationCoords, getUserLocation } = useLocation();
+  const { params } = useRoute() as MapRouteParams;
+  const { locationCoords, getUserLocation, getPhotoLocation } = useLocation();
 
   useEffect(() => {
-    (async () => await getUserLocation())();
+    (async () =>
+      params.type === "user"
+        ? await getUserLocation()
+        : await getPhotoLocation(params.address))();
   }, []);
 
   return (
@@ -26,7 +32,12 @@ const Map = () => {
           minZoomLevel={4}
           showsUserLocation
         >
-          <Marker title="Your set point" coordinate={locationCoords} />
+          <Marker
+            title={
+              params.type === "user" ? "Your photo location" : "Photo location"
+            }
+            coordinate={locationCoords}
+          />
         </MapView>
       ) : (
         <UIActivityIndicator

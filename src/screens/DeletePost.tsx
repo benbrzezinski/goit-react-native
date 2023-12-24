@@ -10,18 +10,22 @@ import {
   Platform,
   Image,
 } from "react-native";
-import { useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useState, useEffect } from "react";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { UIActivityIndicator } from "react-native-indicators";
 import { Fontisto, Ionicons, Feather } from "@expo/vector-icons";
-import { addPost } from "../redux/posts/actions";
+import { DeletePostRouteParams } from "../types";
+import { deletePost } from "../redux/posts/actions";
 import { useAppDispatch } from "../redux/store";
 import MainButton from "../components/MainButton";
 import useImagePicker from "../hooks/useImagePicker";
 import useLocation from "../hooks/useLocation";
 import usePosts from "../hooks/usePosts";
 
-const CreatePost = () => {
+const DeletePost = () => {
+  const {
+    params: { id, imageParam, nameParam, locationNameParam },
+  } = useRoute() as DeletePostRouteParams;
   const [name, setName] = useState("");
   const [isLocationFocused, setIsLocationFocused] = useState(false);
   const { image, setImage, loader, PickImageModal, setModalVisible } =
@@ -32,11 +36,14 @@ const CreatePost = () => {
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
 
-  const canBePublished =
-    image.trim() && name.trim() && locationName.trim() ? true : false;
+  useEffect(() => {
+    setImage(imageParam);
+    setName(nameParam);
+    setLocationName(locationNameParam);
+  }, []);
 
-  const handlePublish = () => {
-    dispatch(addPost({ image, name, locationName }));
+  const handleDelete = () => {
+    dispatch(deletePost(id));
     navigation.navigate("Posts");
   };
 
@@ -67,6 +74,7 @@ const CreatePost = () => {
                   style={[
                     styles.cameraCircle,
                     {
+                      pointerEvents: "none",
                       display: loader ? "none" : "flex",
                       backgroundColor: image ? "#ffffff4d" : "#fff",
                     },
@@ -84,14 +92,13 @@ const CreatePost = () => {
                   />
                 </TouchableOpacity>
               </View>
-              <Text style={styles.text}>
-                {image ? "Delete photo" : "Add photo"}
-              </Text>
+              <Text style={styles.text}>Photo</Text>
             </View>
             <View
               style={[
                 styles.inputsContainer,
                 {
+                  pointerEvents: "none",
                   flexDirection: isLocationFocused
                     ? "column-reverse"
                     : "column",
@@ -146,21 +153,15 @@ const CreatePost = () => {
                 isPostsLoading ? (
                   <UIActivityIndicator size={24} color="#fff" />
                 ) : (
-                  "Publish"
+                  <Feather name="trash-2" size={24} color="#fff" />
                 )
               }
-              onPress={handlePublish}
-              styleButton={{
-                backgroundColor: canBePublished ? "#ff6c00" : "#f6f6f6",
-                marginBottom: 0,
-              }}
-              styleText={{ color: canBePublished ? "#fff" : "#bdbdbd" }}
-              disabled={!canBePublished}
+              onPress={handleDelete}
             />
           </View>
           <View style={styles.footer}>
             <View style={styles.button}>
-              <Feather name="trash-2" size={24} color="#bdbdbd" />
+              <Text style={[styles.text, { fontSize: 12 }]}>Publish</Text>
             </View>
           </View>
         </View>
@@ -258,4 +259,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreatePost;
+export default DeletePost;

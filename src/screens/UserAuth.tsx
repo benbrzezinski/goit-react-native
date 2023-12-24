@@ -8,15 +8,23 @@ import {
   Platform,
   Dimensions,
 } from "react-native";
+import { useEffect } from "react";
 import { useRoute } from "@react-navigation/native";
+import { Toast } from "toastify-react-native";
 import { AuthRouteParams } from "../types";
 import SigningForm from "../components/SigningForm";
 import Mountains from "../../assets/images/mountains-bg.png";
+import useAuth from "../hooks/useAuth";
 
 const UserAuth = () => {
   const {
     params: { type },
   } = useRoute() as AuthRouteParams;
+  const { authError } = useAuth();
+
+  useEffect(() => {
+    if (authError) Toast.error(authError, "top");
+  }, [authError]);
 
   const keyboardVerticalOffset = Platform.select({
     ios: type === "registration" ? -100 : -160,
@@ -52,8 +60,8 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: "#d7d7d7",
     justifyContent: "flex-start",
+    backgroundColor: "#d7d7d7",
   },
   bgImg: {
     position: "absolute",

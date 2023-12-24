@@ -5,12 +5,16 @@ import { UIActivityIndicator } from "react-native-indicators";
 import { ValidationError } from "yup";
 import { EvilIcons } from "@expo/vector-icons";
 import { Toast } from "toastify-react-native";
+import { registerDB, loginDB } from "../redux/auth/actions";
+import { cancelAuthError } from "../redux/auth/slice";
 import { registerSchema, loginSchema } from "../schemas";
 import { SigningFormTypes } from "../types";
+import { useAppDispatch } from "../redux/store";
 import MainInput from "./MainInput";
 import MainButton from "./MainButton";
 import useInputFocused from "../hooks/useInputFocused";
 import useImagePicker from "../hooks/useImagePicker";
+import useAuth from "../hooks/useAuth";
 
 const SigningForm = ({ type }: SigningFormTypes) => {
   const [login, setLogin] = useState("");
@@ -24,35 +28,22 @@ const SigningForm = ({ type }: SigningFormTypes) => {
     handleInputFocus,
     handleInputBlur,
   } = useInputFocused();
-  const { image, setImage, loader, PickImageTypeModal, setModalVisible } =
+  const { image, setImage, loader, PickImageModal, setModalVisible } =
     useImagePicker();
+  const { isAuthLoading } = useAuth();
   const navigation = useNavigation();
+  const dispatch = useAppDispatch();
 
   const handleSigningForm = async () => {
     try {
       if (type === "registration") {
         await registerSchema.validate({ login, email, password });
-
-        Toast.success(
-          `{ Login: ${login.trim()}, Email: ${email.trim()}, Password: ${password.trim()} }`
+        dispatch(
+          registerDB({ email, password, displayName: login, photoURL: image })
         );
-
-        setLogin("");
-        setEmail("");
-        setPassword("");
-
-        navigation.navigate("Home");
       } else {
         await loginSchema.validate({ email, password });
-
-        Toast.success(
-          `{ Email: ${email.trim()}, Password: ${password.trim()} }`
-        );
-
-        setEmail("");
-        setPassword("");
-
-        navigation.navigate("Home");
+        dispatch(loginDB({ email, password }));
       }
     } catch (err) {
       const yupError = err as ValidationError;
@@ -62,8 +53,10 @@ const SigningForm = ({ type }: SigningFormTypes) => {
 
   const handleSwitchForm = () => {
     if (type === "registration") {
+      dispatch(cancelAuthError());
       navigation.navigate("Login");
     } else {
+      dispatch(cancelAuthError());
       navigation.navigate("Registration");
     }
   };
@@ -163,7 +156,15 @@ const SigningForm = ({ type }: SigningFormTypes) => {
           </View>
         </View>
         <MainButton
-          title={type === "registration" ? "Registration" : "Sign in"}
+          title={
+            isAuthLoading ? (
+              <UIActivityIndicator size={24} color="#fff" />
+            ) : type === "registration" ? (
+              "Registration"
+            ) : (
+              "Sign in"
+            )
+          }
           onPress={handleSigningForm}
         />
         <Pressable
@@ -177,7 +178,7 @@ const SigningForm = ({ type }: SigningFormTypes) => {
           </Text>
         </Pressable>
       </View>
-      <PickImageTypeModal />
+      <PickImageModal />
     </>
   );
 };

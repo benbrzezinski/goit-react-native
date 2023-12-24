@@ -5,16 +5,24 @@ import {
   getFocusedRouteNameFromRoute,
 } from "@react-navigation/native";
 import { StyleSheet, View, Pressable, TouchableOpacity } from "react-native";
+import { useEffect } from "react";
+import { Toast } from "toastify-react-native";
 import { Feather, AntDesign } from "@expo/vector-icons";
 import Posts from "./Posts";
 import Profile from "./Profile";
 import HeaderRight from "../components/HeaderRight";
+import usePosts from "../hooks/usePosts";
 
 const Home = () => {
   const Tab = createBottomTabNavigator();
   const route = useRoute();
   const currentRoute = getFocusedRouteNameFromRoute(route);
   const navigation = useNavigation();
+  const { postsError } = usePosts();
+
+  useEffect(() => {
+    if (postsError) Toast.error(postsError, "top");
+  }, [postsError]);
 
   const handleNav = (type: "posts" | "createPost" | "profile") => {
     const navType: { [key: string]: () => void } = {

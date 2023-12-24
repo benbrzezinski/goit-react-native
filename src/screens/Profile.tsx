@@ -1,5 +1,6 @@
 import { StyleSheet, View, ImageBackground, Dimensions } from "react-native";
 import ProfileContent from "../components/ProfileContent";
+import UserPostsList from "../components/UserPostsList";
 import Mountains from "../../assets/images/mountains-bg.png";
 
 const Profile = () => {
@@ -11,9 +12,10 @@ const Profile = () => {
         resizeMode="cover"
         alt="Image of mountains in the background"
       />
-      <View style={styles.mainContainer}>
+      <View style={styles.profileContainer}>
         <ProfileContent />
       </View>
+      <UserPostsList />
     </View>
   );
 };
@@ -21,15 +23,15 @@ const Profile = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#d7d7d7",
     justifyContent: "flex-start",
+    backgroundColor: "#d7d7d7",
   },
   bgImg: {
     position: "absolute",
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height,
   },
-  mainContainer: {
+  profileContainer: {
     flex: 1,
     justifyContent: "flex-end",
   },
