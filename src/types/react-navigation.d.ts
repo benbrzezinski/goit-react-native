@@ -1,4 +1,4 @@
-import { NavigationProp, ParamListBase } from "@react-navigation/native";
+import { ParamListBase } from "@react-navigation/native";
 
 declare global {
   namespace ReactNavigation {
