@@ -10,6 +10,7 @@ import Home from "../screens/Home";
 import CreatePost from "../screens/CreatePost";
 import DeletePost from "../screens/DeletePost";
 import Map from "../screens/Map";
+import Comments from "../screens/Comments";
 import HeaderLeft from "./HeaderLeft";
 import useAuth from "../hooks/useAuth";
 
@@ -32,6 +33,7 @@ const AppNav = () => {
         initialRouteName="Login"
         screenOptions={{
           animationTypeForReplace: isLoggedIn ? "push" : "pop",
+          gestureEnabled: false,
           headerStyle: {
             shadowOpacity: 0,
             backgroundColor: "#fff",
@@ -68,7 +70,12 @@ const AppNav = () => {
             <MainStack.Screen
               name="Map"
               component={Map}
-              options={{ title: "Map", headerLeft: HeaderLeft }}
+              options={{ headerLeft: HeaderLeft }}
+            />
+            <MainStack.Screen
+              name="Comments"
+              component={Comments}
+              options={{ headerLeft: HeaderLeft }}
             />
           </>
         ) : (

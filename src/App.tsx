@@ -1,4 +1,5 @@
 import "react-native-gesture-handler";
+import "react-native-get-random-values";
 import { Provider } from "react-redux";
 import { StatusBar } from "react-native";
 import { useFonts } from "expo-font";

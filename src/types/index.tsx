@@ -1,18 +1,28 @@
-import { InputModeOptions } from "react-native";
+import { Timestamp } from "firebase/firestore";
+import {
+  StyleProp,
+  ViewStyle,
+  TextStyle,
+  InputModeOptions,
+} from "react-native";
 
 export interface SigningFormTypes {
   type: "registration" | "login";
 }
 
 export interface HeaderRightTypes {
-  style: object;
+  style: StyleProp<ViewStyle>;
+}
+
+export interface ListEmptyTypes {
+  text: string;
 }
 
 export interface MainButtonTypes {
   title: string | React.JSX.Element;
   onPress: () => void;
-  styleButton?: object;
-  styleText?: object;
+  styleButton?: StyleProp<ViewStyle>;
+  styleText?: StyleProp<TextStyle>;
   disabled?: boolean;
 }
 
@@ -27,6 +37,8 @@ export interface MainInputTypes {
   onBlur: () => void;
   paddingRight?: number;
 }
+
+export type InputFocusedTypes = "login" | "email" | "password" | "comment";
 
 export interface AuthRouteParams {
   params: {
@@ -48,6 +60,12 @@ interface PhotoMapRouteParams {
 }
 
 export type MapRouteParams = UserMapRouteParams | PhotoMapRouteParams;
+
+export interface CommentsRouteParams {
+  params: {
+    id: string;
+  };
+}
 
 export interface DeletePostRouteParams {
   params: {
@@ -92,10 +110,13 @@ export interface UpdateProfileData {
   photoURL?: string;
 }
 
-interface Comment {
+export interface Comment {
+  id: string;
+  username: string;
   profileImg: string;
   text: string;
-  createdAt: Date;
+  createdBy: string;
+  createdAt: Timestamp;
 }
 
 export interface Post {
@@ -106,7 +127,7 @@ export interface Post {
   usersLikes: string[];
   comments: Comment[];
   createdBy: string;
-  createdAt: Date;
+  createdAt: Timestamp;
 }
 
 export interface PostsState {
@@ -126,7 +147,7 @@ export interface AddPostData {
 }
 
 export interface UpdatePostData {
-  userID: string | undefined;
+  userID?: string;
   postID: string;
   usersLikes?: string[];
   comment?: Comment;

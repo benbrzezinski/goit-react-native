@@ -94,7 +94,6 @@ const Home = () => {
         name="Posts"
         component={Posts}
         options={{
-          title: "Posts",
           headerLeft: () => null,
           headerRight: () => <HeaderRight style={{ paddingRight: 16 }} />,
         }}

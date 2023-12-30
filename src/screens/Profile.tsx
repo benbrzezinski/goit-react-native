@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "flex-start",
-    backgroundColor: "#d7d7d7",
+    backgroundColor: "#eee",
   },
   bgImg: {
     position: "absolute",

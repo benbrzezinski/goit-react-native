@@ -1,11 +1,13 @@
 import { useState } from "react";
+import { InputFocusedTypes } from "../types";
 
 const useInputFocused = () => {
   const [isLoginFocused, setLoginFocused] = useState(false);
   const [isEmailFocused, setEmailFocused] = useState(false);
   const [isPasswordFocused, setPasswordFocused] = useState(false);
+  const [isCommentFocused, setCommentFocused] = useState(false);
 
-  const handleInputFocus = (type: string) => {
+  const handleInputFocus = (type: InputFocusedTypes) => {
     switch (type) {
       case "login":
         setLoginFocused(true);
@@ -16,12 +18,15 @@ const useInputFocused = () => {
       case "password":
         setPasswordFocused(true);
         break;
+      case "comment":
+        setCommentFocused(true);
+        break;
       default:
         return;
     }
   };
 
-  const handleInputBlur = (type: string) => {
+  const handleInputBlur = (type: InputFocusedTypes) => {
     switch (type) {
       case "login":
         setLoginFocused(false);
@@ -32,6 +37,9 @@ const useInputFocused = () => {
       case "password":
         setPasswordFocused(false);
         break;
+      case "comment":
+        setCommentFocused(false);
+        break;
       default:
         return;
     }
@@ -41,6 +49,7 @@ const useInputFocused = () => {
     isLoginFocused,
     isEmailFocused,
     isPasswordFocused,
+    isCommentFocused,
     handleInputFocus,
     handleInputBlur,
   };

@@ -37,13 +37,18 @@ const SigningForm = ({ type }: SigningFormTypes) => {
   const handleSigningForm = async () => {
     try {
       if (type === "registration") {
-        await registerSchema.validate({ login, email, password });
+        await registerSchema.validate({ image, login, email, password });
         dispatch(
-          registerDB({ email, password, displayName: login, photoURL: image })
+          registerDB({
+            email: email.trim(),
+            password: password.trim(),
+            displayName: login.trim(),
+            photoURL: image,
+          })
         );
       } else {
         await loginSchema.validate({ email, password });
-        dispatch(loginDB({ email, password }));
+        dispatch(loginDB({ email: email.trim(), password: password.trim() }));
       }
     } catch (err) {
       const yupError = err as ValidationError;

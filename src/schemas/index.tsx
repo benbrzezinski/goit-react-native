@@ -17,6 +17,7 @@ export const registerSchema = Yup.object().shape({
     .trim()
     .required("Login is required")
     .matches(/^[a-zA-Z\s]+$/, "Login must contain only letters"),
+  image: Yup.string().trim().required("Set your profile photo"),
 });
 
 export const loginSchema = Yup.object().shape({

@@ -56,7 +56,7 @@ const DeletePost = () => {
         <View style={styles.container}>
           <View style={styles.wrapper}>
             <View style={styles.photoContainer}>
-              <View style={styles.photoBox}>
+              <View style={[styles.photoBox, image ? { borderWidth: 0 } : {}]}>
                 <UIActivityIndicator
                   size={42}
                   color="#ff6c00"

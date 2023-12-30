@@ -11,6 +11,7 @@ import {
   updateDoc,
   arrayUnion,
   arrayRemove,
+  Timestamp,
 } from "firebase/firestore";
 import { db, auth } from "../../firebase";
 import {
@@ -75,7 +76,7 @@ export const addPost = createAsyncThunk(
           usersLikes: [],
           comments: [],
           createdBy: owner,
-          createdAt: new Date(),
+          createdAt: Timestamp.fromDate(new Date()),
         };
 
         const postRef = await addDoc(collection(db, "posts"), post);

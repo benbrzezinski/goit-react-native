@@ -57,11 +57,12 @@ const UserAuth = () => {
 const styles = StyleSheet.create({
   keyboardAvoidingView: {
     flex: 1,
+    backgroundColor: "#fff",
   },
   container: {
     flex: 1,
     justifyContent: "flex-start",
-    backgroundColor: "#d7d7d7",
+    backgroundColor: "#eee",
   },
   bgImg: {
     position: "absolute",

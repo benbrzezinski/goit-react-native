@@ -33,7 +33,7 @@ const CreatePost = () => {
   const dispatch = useAppDispatch();
 
   const canBePublished =
-    image.trim() && name.trim() && locationName.trim() ? true : false;
+    image && name.trim() && locationName.trim() ? true : false;
 
   const handlePublish = () => {
     dispatch(addPost({ image, name, locationName }));
@@ -49,7 +49,7 @@ const CreatePost = () => {
         <View style={styles.container}>
           <View style={styles.wrapper}>
             <View style={styles.photoContainer}>
-              <View style={styles.photoBox}>
+              <View style={[styles.photoBox, image ? { borderWidth: 0 } : {}]}>
                 <UIActivityIndicator
                   size={42}
                   color="#ff6c00"
