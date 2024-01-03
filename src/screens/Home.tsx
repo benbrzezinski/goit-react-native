@@ -8,6 +8,7 @@ import { StyleSheet, View, Pressable, TouchableOpacity } from "react-native";
 import { useEffect } from "react";
 import { Toast } from "toastify-react-native";
 import { Feather, AntDesign } from "@expo/vector-icons";
+import { HandleNavTypes, HandleNavTarget } from "../types";
 import Posts from "./Posts";
 import Profile from "./Profile";
 import HeaderRight from "../components/HeaderRight";
@@ -24,14 +25,14 @@ const Home = () => {
     if (postsError) Toast.error(postsError, "top");
   }, [postsError]);
 
-  const handleNav = (type: "posts" | "createPost" | "profile") => {
-    const navType: { [key: string]: () => void } = {
+  const handleNav = (target: HandleNavTarget) => {
+    const navType: HandleNavTypes = {
       posts: () => navigation.navigate("Posts"),
       createPost: () => navigation.navigate("CreatePost"),
       profile: () => navigation.navigate("Profile"),
     };
 
-    return navType[type]();
+    return navType[target]();
   };
 
   return (
@@ -47,7 +48,7 @@ const Home = () => {
           </Pressable>
           <TouchableOpacity
             style={[
-              styles.button,
+              styles.btn,
               { pointerEvents: currentRoute === "Profile" ? "none" : "auto" },
             ]}
             activeOpacity={0.8}
@@ -123,7 +124,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 30,
   },
-  button: {
+  btn: {
     width: 70,
     height: 40,
     justifyContent: "center",

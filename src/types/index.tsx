@@ -38,6 +38,12 @@ export interface MainInputTypes {
   paddingRight?: number;
 }
 
+export interface HandleNavTypes {
+  [key: string]: () => void;
+}
+
+export type HandleNavTarget = "posts" | "createPost" | "profile";
+
 export type InputFocusedTypes = "login" | "email" | "password" | "comment";
 
 export interface AuthRouteParams {
